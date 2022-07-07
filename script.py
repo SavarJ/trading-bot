@@ -8,11 +8,9 @@ SOCKET="wss://ws-feed.exchange.coinbase.com"
 def on_open(ws):
     print("Websocket connection opened!")
     ws.send(json.dumps({
-          "type": "subscribe",
-    "product_ids": [
-        "ETH-USD"
-    ],
-    "channels": ["ticker"]
+        "type": "subscribe",
+        "product_ids": ["ETH-USD"],
+        "channels": ["ticker_batch"]
     }))
 
 def on_close(ws):
