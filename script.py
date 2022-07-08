@@ -1,6 +1,7 @@
 import json
 import websocket
 import pprint
+import numpy as np
 
 # SOCKET="wss://ws-feed-public.sandbox.exchange.coinbase.com"
 SOCKET="wss://ws-feed.exchange.coinbase.com"
