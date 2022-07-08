@@ -5,11 +5,16 @@ import pprint
 # SOCKET="wss://ws-feed-public.sandbox.exchange.coinbase.com"
 SOCKET="wss://ws-feed.exchange.coinbase.com"
 
+RSI_PERIOD=14
+RSI_OVERBOUGHT = 70
+RSI_OVERSOLD = 30
+TRADE_SYMBOL = "ETH-USD"
+
 def on_open(ws):
     print("Websocket connection opened!")
     ws.send(json.dumps({
         "type": "subscribe",
-        "product_ids": ["ETH-USD"],
+        "product_ids": [TRADE_SYMBOL],
         "channels": ["ticker_batch"]
     }))
 
