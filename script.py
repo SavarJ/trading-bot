@@ -10,6 +10,8 @@ RSI_OVERBOUGHT = 70
 RSI_OVERSOLD = 30
 TRADE_SYMBOL = "ETH-USD"
 
+closes = []
+
 def on_open(ws):
     print("Websocket connection opened!")
     ws.send(json.dumps({
@@ -28,6 +30,37 @@ def on_message(ws, message):
     print("Received message")
     json_message = json.loads(message)
     pprint.pprint(json_message)
+    if json_message["type"] == "ticker":
+        closes.append(float(json_message["price"]))
+        if len(closes) > RSI_PERIOD:
+            np_closes = np.array(closes)
+            rsi = talib.RSI(np_closes, RSI_PERIOD)
+            current_rsi = rsi[-1]
+            print("The current RSI is: " + str(current_rsi))
+
+            if current_rsi > RSI_OVERBOUGHT:
+                if not in_position:
+                    print("It is overbought, but we just sold, so we don't buy")
+                else:
+                    print("It is overbought, so we buy!")
+                    order_success = buy_order(ws)
+                    if order_success:
+                        in_position = False
+            
+
+            if current_rsi < RSI_OVERSOLD:
+                if in_position:
+                    print("It is oversold, but we just bought, so we don't sell")
+                else:
+                    print("It is oversold, so we sell!")
+                    order_success = sell_order(ws)
+                    if order_success:
+                        in_position = True
+                
+
+
+
+
 
 
 
