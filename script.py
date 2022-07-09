@@ -3,6 +3,7 @@ import websocket
 import pprint
 import numpy as np
 import talib
+import cbpro
 
 # SOCKET="wss://ws-feed-public.sandbox.exchange.coinbase.com"
 SOCKET="wss://ws-feed.exchange.coinbase.com"
@@ -61,7 +62,9 @@ def on_message(ws, message):
                     order_success = sell_order(ws)
                     if order_success:
                         in_position = True
-                
+
+auth_client = cbpro.AuthenticatedClient(key, b64secret, passphrase,
+                                  api_url="https://api-public.sandbox.pro.coinbase.com")
 
 def buy_order(ws):
     return True
