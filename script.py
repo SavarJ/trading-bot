@@ -3,15 +3,14 @@ import websocket
 import pprint
 import numpy as np
 import talib
-import cbpro
 
-# SOCKET="wss://ws-feed-public.sandbox.exchange.coinbase.com"
-SOCKET="wss://ws-feed.exchange.coinbase.com"
+SOCKET="wss://ws-feed-public.sandbox.exchange.coinbase.com"
+# SOCKET="wss://ws-feed.exchange.coinbase.com"
 
 RSI_PERIOD=14
 RSI_OVERBOUGHT = 55
 RSI_OVERSOLD = 45
-TRADE_SYMBOL = "ETH-USD"
+TRADE_SYMBOL = "BTC-USD"
 
 closes = []
 in_position = False
@@ -63,13 +62,18 @@ def on_message(ws, message):
                     if order_success:
                         in_position = True
 
-auth_client = cbpro.AuthenticatedClient(key, b64secret, passphrase,
-                                  api_url="https://api-public.sandbox.pro.coinbase.com")
 
 def buy_order(ws):
     return True
 
 def sell_order(ws):
+    ws.send(json.dumps({
+        "type": "place",
+        "order_type": "limit",
+        "product_id": TRADE_SYMBOL,
+        "side": "sell",
+        "price": "0.02",
+    }))
     return True
 
 ws = websocket.WebSocketApp(SOCKET, on_open=on_open, on_message=on_message, on_error=on_error, on_close=on_close)
